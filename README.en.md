@@ -12,7 +12,7 @@ The installer is created using Inno Setup. For more information on Inno Setup, v
    This installer is still in the testing phase, so it may be unstable.
 
 3. **Technical Skill Requirement**
-   Although this installer can be used to install FaceFusion on Windows systems, please note that the installation environment on Windows can be quite complex. Users of this installer should have a certain level of technical ability to handle potential issues. Therefore, it is recommended to use the official FaceFusion installer.
+   Although this installer can be used to install FaceFusion on Windows systems, please note that the installation environment on Windows can be quite complex. Users of this installer should have a certain level of technical ability to handle potential issues. Therefore, using the official FaceFusion installer might be a better choice for general users.
 
 ## Post-Installation
 After installation, the following three shortcuts will be generated:

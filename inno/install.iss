@@ -11,7 +11,6 @@
 #define AppFileVersion "2024.08.04.01"
 
 [Setup]
-
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 VersionInfoVersion={#AppFileVersion}
@@ -22,10 +21,11 @@ DefaultGroupName={#MyAppName}
 UninstallDisplayIcon={app}\{#MyIcoPathInApp}
 OutputDir=Output
 ShowLanguageDialog=yes
-OutputBaseFilename=FaceFusion_{#MyAppVersion}_Setup
+OutputBaseFilename=FaceFusion_{#MyAppVersion}_Setup_{#AppFileVersion}
 SetupIconFile={#MyIcoName}
 Compression=lzma
 SolidCompression=yes
+SetupLogging=yes
 
 [Languages]
 Name: "zhs"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"; InfoBeforeFile: "readme-简体中文.txt";
@@ -36,13 +36,11 @@ Source: "{#MyIcoName}"; DestDir: "{app}\.ico"; Flags: ignoreversion
 Source: "readme.txt"; DestDir: "{app}"; Languages: en; Flags: isreadme
 Source: "readme-简体中文.txt"; DestDir: "{app}"; Languages: zhs; Flags: isreadme
 
-[Dirs]
-Name: {app}\.assets\models
-
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppRunBatName}"; Parameters: ""; IconFilename: "{app}\{#MyIcoPathInApp}"
 Name: "{group}\{#MyAppName2}"; Filename: "{app}\{#MyAppRunBatName2}"; Parameters: ""; IconFilename: "{app}\{#MyIcoPathInApp}"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"; IconFilename: "{app}\{#MyIcoPathInApp}"
+
 
 [CustomMessages]
 en.cloneRepo=Git: Clone the FaceFusion repository
@@ -283,13 +281,13 @@ begin
 
   // Create install-application.bat
   if UseCuda then
-    Contents := '@echo off && conda activate facefusion && cd src && python install.py --onnxruntime cuda-11.8 '
+    Contents := '@echo off && conda activate facefusion && cd src && python install.py --onnxruntime cuda-11.8'
   else if UseDirectMl then
-    Contents := '@echo off && conda activate facefusion && cd src && python install.py --onnxruntime directml '
+    Contents := '@echo off && conda activate facefusion && cd src && python install.py --onnxruntime directml'
   else if UseOpenVino then
-    Contents := '@echo off && conda activate facefusion && cd src && python install.py --onnxruntime openvino '
+    Contents := '@echo off && conda activate facefusion && cd src && python install.py --onnxruntime openvino'
   else
-    Contents := '@echo off && conda activate facefusion && cd src && python install.py --onnxruntime default ';
+    Contents := '@echo off && conda activate facefusion && cd src && python install.py --onnxruntime default';
   
   SaveStringToFile(ExpandConstant('{app}\install-application.bat'), Contents, False);
 
@@ -315,6 +313,15 @@ begin
     MsgBox(ExpandConstant('{cm:GitCloneFailed, ResultCode}'), mbError, MB_OK);
     Exit;
   end;
+
+  CreateDir(ExpandConstant('{app}\src\.assets'));
+  CreateDir(ExpandConstant('{app}\src\.assets\models'));
+  if not DirExists(ExpandConstant('{app}\src\.assets\models')) then
+  begin
+    MsgBox(ExpandConstant('Failed to create {app}\src\.assets\models'), mbError, MB_OK);
+    Exit;
+  end;
+  
 end;
 
 // Initialize Conda environment for FaceFusion
@@ -354,8 +361,6 @@ end;
 
 // Handle changes to the setup steps
 procedure CurStepChanged(CurStep: TSetupStep);
-var
-  ResultCode: Integer;
 begin
   if CurStep = ssPostInstall then
   begin
