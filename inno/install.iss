@@ -8,15 +8,19 @@
 #define MyIcoName "ff.ico"
 #define MyIcoPathInApp ".ico\ff.ico"
 
+#define AppFileVersion "2024.08.04.01"
+
 [Setup]
+
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
+VersionInfoVersion={#AppFileVersion}
 WizardStyle=modern
 AppPublisher={#MyAppPublisher}
 DefaultDirName=C:\FaceFusion
 DefaultGroupName={#MyAppName}
 UninstallDisplayIcon={app}\{#MyIcoPathInApp}
-OutputDir=.
+OutputDir=Output
 ShowLanguageDialog=yes
 OutputBaseFilename=FaceFusion_{#MyAppVersion}_Setup
 SetupIconFile={#MyIcoName}
@@ -24,13 +28,16 @@ Compression=lzma
 SolidCompression=yes
 
 [Languages]
-Name: "en"; MessagesFile: "compiler:Default.isl"; InfoBeforeFile: "readme.txt"; 
 Name: "zhs"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"; InfoBeforeFile: "readme-简体中文.txt";
+Name: "en"; MessagesFile: "compiler:Default.isl"; InfoBeforeFile: "readme.txt"; 
 
 [Files]
 Source: "{#MyIcoName}"; DestDir: "{app}\.ico"; Flags: ignoreversion
 Source: "readme.txt"; DestDir: "{app}"; Languages: en; Flags: isreadme
 Source: "readme-简体中文.txt"; DestDir: "{app}"; Languages: zhs; Flags: isreadme
+
+[Dirs]
+Name: {app}\.assets\models
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppRunBatName}"; Parameters: ""; IconFilename: "{app}\{#MyIcoPathInApp}"
@@ -175,9 +182,14 @@ begin
   NeedInstallConda := PlatformOptionPage.Values[1];
   
   if CurPageID = PlatformInstallInstructionPage.ID then begin
-    if not NeedInstallGit and not NeedInstallConda then
+    Log('before: Aborted by uddder.')
+    Log('NeedInstallGit: ' + IntToStr(Integer(NeedInstallGit )));
+    Log('NeedInstallConda: ' + IntToStr( Integer(NeedInstallConda)));
+    Log('not NeedInstallGit and not NeedInstallConda: ' + IntToStr(Integer(not NeedInstallGit and not NeedInstallConda)));
+    if (not NeedInstallGit) and (not NeedInstallConda) then begin
      Result := False;
      Exit;
+    end;
 
     DownloadPage.Clear;
     if NeedInstallGit then
@@ -192,10 +204,11 @@ begin
       except
         if DownloadPage.AbortedByUser then
           Log('Aborted by user.')
-        else
+        else begin
           SuppressibleMsgBox(AddPeriod(GetExceptionMessage), mbCriticalError, MB_OK, IDOK);
           Result := False;
           Exit;
+        end;
       end;
     finally
       DownloadPage.Hide;
