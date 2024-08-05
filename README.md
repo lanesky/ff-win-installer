@@ -1,4 +1,5 @@
-[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/lanesky/ff-win-installer/blob/master/README.md)
+[![中](https://img.shields.io/badge/lang-中-red.svg)](https://github.com/lanesky/ff-win-installer/blob/master/README.md)
+[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/lanesky/ff-win-installer/blob/master/README.en.md)
 
 # FaceFusion Windows 安装包
 

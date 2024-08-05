@@ -1,3 +1,6 @@
+[![中](https://img.shields.io/badge/lang-中-red.svg)](https://github.com/lanesky/ff-win-installer/blob/master/README.md)
+[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/lanesky/ff-win-installer/blob/master/README.en.md)
+
 # FaceFusion Windows Installer
 
 This program generates a Windows installer for FaceFusion. Please note that this installer is not officially provided by FaceFusion (https://github.com/facefusion/facefusion).
